@@ -31,7 +31,7 @@ public class StreamController {
 
         String requestBody = """
                 {
-                    "model": "qwen-plus",
+                    "model": "kimi-k3",
                     "messages": [
                         {
                             "role": "system",

@@ -8,6 +8,7 @@ spring:
         model: deepseek-r1:7b
     dashscope:
       api-key: @dashscope.api.key@
+      base-url: https://ws-g2p99yozkxtk0c3g.cn-beijing.maas.aliyuncs.com
 server:
   port: 8000
 logging:
