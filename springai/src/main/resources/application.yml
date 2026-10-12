@@ -10,3 +10,6 @@ spring:
       api-key: @dashscope.api.key@
 server:
   port: 8000
+logging:
+  level:
+    org.springframework.boot.autoconfigure: INFO
