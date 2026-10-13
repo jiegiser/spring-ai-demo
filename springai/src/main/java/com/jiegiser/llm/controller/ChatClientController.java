@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/chat")
@@ -47,6 +48,11 @@ public class ChatClientController implements InitializingBean {
     public String call(String message) {
         // Prompt 里面的内容相当于追加，不会覆盖
         return chatClient.prompt(new Prompt(new SystemMessage("请用韩文回答问题"), new UserMessage(message))).call().content();
+    }
+
+    @GetMapping("/stream")
+    public Flux<String> stream(String message) {
+        return chatClient.prompt(message).stream().content();
     }
 
     @Override
