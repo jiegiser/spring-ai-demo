@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
-import reactor.netty.http.server.HttpServerResponse;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +59,7 @@ public class PromptTemplateController implements InitializingBean {
         variables.put("language", "Java");
         variables.put("topic", message);
         PromptTemplate promptTemplate = PromptTemplate.builder().resource(systemPrompt).variables(variables).build();
-        return chatClient.prompt(promptTemplate.create()).system("你是一个专业的的 github 项目收集人员").stream().content();
+        return chatClient.prompt(promptTemplate.create()).system("你是一个专业的 github 项目收集人员").stream().content();
     }
 
     @Override
