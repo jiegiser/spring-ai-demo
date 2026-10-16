@@ -5,8 +5,19 @@ package com.jiegiser.llm.controller;/*
  * @Modified By:
  */
 
+import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 /**
  * 持久化记忆
@@ -16,8 +27,46 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * Spring AI 中的记忆存储是基于 ChatMemoryRepository 这个接口扩展的，他提供了一些列实现用来做基于存储，
  * 包括 MessageWindowChatMemory 所使用到的 InMemoryChatMemoryRepository，这就是一种基于 ConcurrentHashMap 的本地内存的记忆方式。
+ *
+ * 数据库需要自己创建 SPRING_AI_CHAT_MEMORY 表
+ * CREATE TABLE IF NOT EXISTS SPRING_AI_CHAT_MEMORY (
+ *     `conversation_id` VARCHAR(36) NOT NULL,
+ *     `content` TEXT NOT NULL,
+ *     `type` ENUM('USER', 'ASSISTANT', 'SYSTEM', 'TOOL') NOT NULL,
+ *     `timestamp` TIMESTAMP NOT NULL,
+ *
+ *     INDEX `SPRING_AI_CHAT_MEMORY_CONVERSATION_ID_TIMESTAMP_IDX` (`conversation_id`, `timestamp`)
+ * );
  */
 @RestController
 @RequestMapping("/jdbc/memory")
-public class JdbcChatMemoryController {
+public class JdbcChatMemoryController implements InitializingBean {
+    @Autowired
+    private ChatModel chatModel;
+    private ChatClient chatClient;
+
+    @Autowired
+    private ChatMemory jdbcChatMemory;
+
+    @GetMapping("/callDb")
+    public Flux<String> callDb(String message, String chatId, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
+
+        return chatClient
+                .prompt()
+                .user(message)
+                .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, chatId))
+                .stream().content();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.chatClient = ChatClient.builder(chatModel)
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(jdbcChatMemory).build(), new SimpleLoggerAdvisor())
+                .defaultOptions(
+                        DashScopeChatOptions.builder()
+                                .withTopP(0.7)
+                                .build()
+                ).build();
+    }
 }
