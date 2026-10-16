@@ -55,6 +55,25 @@ public class JdbcChatMemoryController implements InitializingBean {
         return chatClient
                 .prompt()
                 .user(message)
+                // 在这次请求上打一个标记，key 叫 chat_memory_conversation_id，值是 chatId
+                /**
+                 * 它跟 defaultAdvisors 里的 MessageChatMemoryAdvisor 怎么配合
+                 * GET /jdbc/memory/callDb?message=你好&chatId=abc123
+                 *         │
+                 *         ▼
+                 * 请求参数容器里塞入：{ "chat_memory_conversation_id" → "abc123" }
+                 *         │
+                 *         ▼
+                 * 请求穿过 Advisor 链，到达 MessageChatMemoryAdvisor：
+                 *         │
+                 *         ├─ 读取参数：conversationId = "abc123"
+                 *         ├─ 用它查库：SELECT * FROM SPRING_AI_CHAT_MEMORY WHERE conversation_id = 'abc123'
+                 *         ├─ 把查到的历史消息拼进 Prompt
+                 *         ▼
+                 * 调大模型 → 拿到回复
+                 *         │
+                 *         └─ MessageChatMemoryAdvisor 把本轮问答也存进库（conversation_id = 'abc123'）
+                 */
                 .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, chatId))
                 .stream().content();
     }
@@ -62,6 +81,15 @@ public class JdbcChatMemoryController implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         this.chatClient = ChatClient.builder(chatModel)
+                // 注册默认的 Advisor（拦截器链），对通过本 ChatClient 发出的每一次请求都生效：
+                // 1. MessageChatMemoryAdvisor：记忆拦截器，请求发送前从 ChatMemory 读取会话历史注入到 Prompt 中，
+                //    AI 回复后又会把新的问答写回 ChatMemory，从而实现多轮对话记忆；
+                //    会话隔离通过 CONVERSATION_ID 参数指定（见 callDb 里的 advisors(...)）。
+                // 2. SimpleLoggerAdvisor：日志拦截器，把最终发给模型的 Prompt 和模型的响应打印到日志，方便调试。
+                // Advisor 是责任链模式（类似 Servlet Filter / Spring AOP）：
+                // 请求依次穿过每个 Advisor，每个 Advisor 可修改请求（如注入历史消息）、
+                // 修改响应（如日志、脱敏），或直接短路返回（如 RAG 命中缓存）。
+                // defaultAdvisors = 全局默认；单个请求里也可用 .advisors(...) 追加或传参数。
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(jdbcChatMemory).build(), new SimpleLoggerAdvisor())
                 .defaultOptions(
                         DashScopeChatOptions.builder()
