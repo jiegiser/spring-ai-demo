@@ -9,6 +9,20 @@ spring:
     dashscope:
       api-key: @dashscope.api.key@
       base-url: https://ws-g2p99yozkxtk0c3g.cn-beijing.maas.aliyuncs.com
+    chat:
+      memory:
+        repository:
+          jdbc:
+            platform: mysql
+            initialization-mode: ALWAYS
+  datasource:
+    url: jdbc:mysql://localhost:3306/spring_ai_db?useUnicode=true&characterEncoding=UTF-8  # 记得改成你自己的
+    username: root  # 记得改成你自己的
+    password: root  # 记得改成你自己的
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      continue-on-error: true  # SQL初始化失败时继续启动
 server:
   port: 8000
 logging:
