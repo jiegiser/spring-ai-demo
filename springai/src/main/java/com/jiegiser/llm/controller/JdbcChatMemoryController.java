@@ -14,6 +14,7 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +43,7 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/jdbc/memory")
 public class JdbcChatMemoryController implements InitializingBean {
     @Autowired
-    private ChatModel chatModel;
+    private ChatModel dashScopeChatModel;
     private ChatClient chatClient;
 
     @Autowired
@@ -80,7 +81,7 @@ public class JdbcChatMemoryController implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.chatClient = ChatClient.builder(chatModel)
+        this.chatClient = ChatClient.builder(dashScopeChatModel)
                 // 注册默认的 Advisor（拦截器链），对通过本 ChatClient 发出的每一次请求都生效：
                 // 1. MessageChatMemoryAdvisor：记忆拦截器，请求发送前从 ChatMemory 读取会话历史注入到 Prompt 中，
                 //    AI 回复后又会把新的问答写回 ChatMemory，从而实现多轮对话记忆；

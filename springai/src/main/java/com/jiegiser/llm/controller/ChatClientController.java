@@ -15,6 +15,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +25,7 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/chat")
 public class ChatClientController implements InitializingBean {
     @Autowired
-    private ChatModel chatModel;
+    private ChatModel dashScopeChatModel;
     private ChatClient chatClient;
 
     @GetMapping("/simpleCall")
@@ -57,7 +58,7 @@ public class ChatClientController implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        chatClient = ChatClient.builder(chatModel)
+        chatClient = ChatClient.builder(dashScopeChatModel)
                 // 实现 Logger 的 Advisor
                 .defaultAdvisors(new SimpleLoggerAdvisor())
                 .defaultSystem("请使用英文回答问题")
