@@ -65,7 +65,7 @@ public class JdbcChatMemoryController implements InitializingBean {
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(jdbcChatMemory).build(), new SimpleLoggerAdvisor())
                 .defaultOptions(
                         DashScopeChatOptions.builder()
-                                .withTopP(0.7)
+                                .topP(0.7)
                                 .build()
                 ).build();
     }
