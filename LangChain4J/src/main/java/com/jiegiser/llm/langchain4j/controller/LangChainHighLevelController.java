@@ -1,10 +1,10 @@
-package cn.hollis.llm.mentor.langchain4j.controller;
+package com.jiegiser.llm.langchain4j.controller;
 
-import cn.hollis.llm.mentor.langchain4j.Book;
-import cn.hollis.llm.mentor.langchain4j.chatmemory.RedisChatMemoryStore;
-import cn.hollis.llm.mentor.langchain4j.service.LangChainAiService;
-import cn.hollis.llm.mentor.langchain4j.service.LangChainMemoryAiService;
-import cn.hollis.llm.mentor.langchain4j.tools.TemperatureTools;
+import com.jiegiser.llm.langchain4j.Book;
+import com.jiegiser.llm.langchain4j.chatmemory.RedisChatMemoryStore;
+import com.jiegiser.llm.langchain4j.service.LangChainAiService;
+import com.jiegiser.llm.langchain4j.service.LangChainMemoryAiService;
+import com.jiegiser.llm.langchain4j.tools.TemperatureTools;
 import com.alibaba.fastjson2.JSON;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -26,13 +26,13 @@ public class LangChainHighLevelController implements InitializingBean {
     @RequestMapping("/chat")
     public String chat(HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        return aiService.chat("日本都有哪些美食？");
+        return aiService.chat("成都都有哪些美食？");
     }
 
     @RequestMapping("/streamChat")
     public Flux<String> streamChat(HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        return aiService.chatStream("日本都有哪些美食？");
+        return aiService.chatStream("成都都有哪些美食？");
     }
 
     @RequestMapping("/chatTemplate")
@@ -77,10 +77,8 @@ public class LangChainHighLevelController implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        langChainMemoryAiService = AiServices.builder(LangChainMemoryAiService.class)
-                .chatModel(chatModel)
-                .chatMemoryProvider(memoryId -> MessageWindowChatMemory.withMaxMessages(10))
-//                .chatMemoryProvider(memoryId -> MessageWindowChatMemory.builder().id(memoryId).maxMessages(10).chatMemoryStore(redisChatMemoryStore).build())
+        langChainMemoryAiService = AiServices.builder(LangChainMemoryAiService.class).chatModel(chatModel).chatMemoryProvider(memoryId -> MessageWindowChatMemory.withMaxMessages(10))
+                //                .chatMemoryProvider(memoryId -> MessageWindowChatMemory.builder().id(memoryId).maxMessages(10).chatMemoryStore(redisChatMemoryStore).build())
                 .build();
     }
 }
