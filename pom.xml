@@ -19,6 +19,7 @@
     <modules>
         <module>springai</module>
         <module>LangChain4J</module>
+        <module>function-call</module>
     </modules>
 
     <properties>
