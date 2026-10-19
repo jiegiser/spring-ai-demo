@@ -2,7 +2,7 @@ server:
   port: 8022
 spring:
   application:
-    name: LangChain4JRun
+    name: LangChain4J
   data:
     redis:
       host: 127.0.0.1
@@ -15,13 +15,13 @@ langchain4j:
   open-ai:
     chat-model:
       api-key: @dashscope.api.key@
-      model-name: qwen-max-latest
+      model-name: qwen3.8-flash
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
       log-requests: true
       log-responses: true
     streaming-chat-model:
       api-key: @dashscope.api.key@
-      model-name: qwen-max-latest
+      model-name: qwen3.8-flash
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
       log-requests: true
       log-responses: true

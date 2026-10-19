@@ -18,6 +18,7 @@
 
     <modules>
         <module>springai</module>
+        <module>LangChain4J</module>
     </modules>
 
     <properties>

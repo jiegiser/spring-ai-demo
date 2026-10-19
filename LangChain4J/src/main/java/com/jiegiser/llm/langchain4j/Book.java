@@ -1,4 +1,4 @@
-package cn.hollis.llm.mentor.langchain4j;
+package com.jiegiser.llm.langchain4j;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 

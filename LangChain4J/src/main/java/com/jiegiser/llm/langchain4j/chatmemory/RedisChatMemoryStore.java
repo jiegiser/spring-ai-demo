@@ -1,4 +1,4 @@
-package cn.hollis.llm.mentor.langchain4j.chatmemory;
+package com.jiegiser.llm.langchain4j.chatmemory;
 
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;

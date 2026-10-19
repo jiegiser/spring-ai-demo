@@ -1,4 +1,4 @@
-package cn.hollis.llm.mentor.langchain4j.config;
+package com.jiegiser.llm.langchain4j.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

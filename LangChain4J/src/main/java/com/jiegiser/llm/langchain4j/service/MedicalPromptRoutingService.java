@@ -1,4 +1,4 @@
-package cn.hollis.llm.mentor.langchain4j.service;
+package com.jiegiser.llm.langchain4j.service;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.spring.AiService;

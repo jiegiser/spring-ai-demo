@@ -1,6 +1,6 @@
-package cn.hollis.llm.mentor.langchain4j.controller;
+package com.jiegiser.llm.langchain4j.controller;
 
-import cn.hollis.llm.mentor.langchain4j.service.LangChainAiService;
+import com.jiegiser.llm.langchain4j.service.LangChainAiService;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.content.retriever.WebSearchContentRetriever;
@@ -22,32 +22,17 @@ public class WebSearchController {
     @GetMapping("/search")
     public String webSearch() {
         // 1. 配置搜索引擎
-        TavilyWebSearchEngine searchEngine = TavilyWebSearchEngine.builder()
-                .apiKey("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")
-                .includeAnswer(true)
-                .searchDepth("advanced")
-                .build();
+        TavilyWebSearchEngine searchEngine = TavilyWebSearchEngine.builder().apiKey("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").includeAnswer(true).searchDepth("advanced").build();
 
         // 2. 配置 Web 搜索检索器
-        WebSearchContentRetriever webRetriever = WebSearchContentRetriever.builder()
-                .webSearchEngine(searchEngine)
-                .maxResults(5)
-                .build();
+        WebSearchContentRetriever webRetriever = WebSearchContentRetriever.builder().webSearchEngine(searchEngine).maxResults(5).build();
 
-        CompressingQueryTransformer queryTransformer = CompressingQueryTransformer.builder()
-                .chatModel(chatModel)
-                .build();
+        CompressingQueryTransformer queryTransformer = CompressingQueryTransformer.builder().chatModel(chatModel).build();
 
         // 3. 配置 RetrievalAugmentor
-        DefaultRetrievalAugmentor augmentor = DefaultRetrievalAugmentor.builder()
-                .contentRetriever(webRetriever)
-                .queryTransformer(queryTransformer)
-                .build();
+        DefaultRetrievalAugmentor augmentor = DefaultRetrievalAugmentor.builder().contentRetriever(webRetriever).queryTransformer(queryTransformer).build();
 
-        LangChainAiService assistant = AiServices.builder(LangChainAiService.class)
-                .chatModel(chatModel)
-                .retrievalAugmentor(augmentor)
-                .build();
+        LangChainAiService assistant = AiServices.builder(LangChainAiService.class).chatModel(chatModel).retrievalAugmentor(augmentor).build();
 
         // 6. 使用 - 获取实时信息
         String answer = assistant.chat("2025年人工智能领域有哪些重大突破？");

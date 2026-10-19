@@ -1,6 +1,6 @@
-package cn.hollis.llm.mentor.langchain4j.service;
+package com.jiegiser.llm.langchain4j.service;
 
-import cn.hollis.llm.mentor.langchain4j.Book;
+import com.jiegiser.llm.langchain4j.Book;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.spring.AiService;
@@ -18,7 +18,7 @@ public interface LangChainAiService {
     @UserMessage("针对用户的内容：{{topic}}，先复述一遍他的问题，然后再回答")
     Flux<String> chatTemplate(String topic);
 
-    @UserMessage("请帮我推荐1本java相关的书")
+    @UserMessage("请帮我推荐 1 本 java 相关的书")
     @SystemMessage("你是一个专业的图书推荐人员")
     Book getBooks();
 }

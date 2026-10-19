@@ -1,4 +1,4 @@
-package cn.hollis.llm.mentor;
+package com.jiegiser.llm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +11,3 @@ public class LangChain4JApplication {
     }
 
 }
-
-
-// 最全AI大模型资源+V备用：fee1024

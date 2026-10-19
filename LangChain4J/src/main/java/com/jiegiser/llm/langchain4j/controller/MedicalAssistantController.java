@@ -1,6 +1,6 @@
-package cn.hollis.llm.mentor.langchain4j.controller;
+package com.jiegiser.llm.langchain4j.controller;
 
-import cn.hollis.llm.mentor.langchain4j.service.MedicalPromptRoutingService;
+import com.jiegiser.llm.langchain4j.service.MedicalPromptRoutingService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
