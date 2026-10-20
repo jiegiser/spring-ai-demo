@@ -9,7 +9,6 @@ import java.math.BigDecimal;
  * @param author      作者
  * @param description 简介
  * @param price       价格
- * @author Hollis
  */
 public record Book(@JsonPropertyDescription("书籍名称") String title,
                    @JsonPropertyDescription("作者") String author,

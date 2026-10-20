@@ -1,0 +1,51 @@
+server:
+  # HTTP 服务端口
+  port: 8004
+  servlet:
+    encoding:
+      # 强制使用 UTF-8 编码（避免中文乱码）
+      charset: UTF-8
+      force: true
+      enabled: true
+    # 应用上下文路径
+    # 完整 MCP 端点：http://localhost:8004/stream/test/api/mcp
+    context-path: /stream/test
+
+spring:
+  application:
+    # 应用名称（用于日志和监控）
+    name: mcp-weather-streamable
+  ai:
+    mcp:
+      server:
+        # MCP 协议类型
+        # STREAMABLE：基于 HTTP 的流式协议（支持长连接、推送）
+        # STATELESS：无状态模式（每次请求独立）
+        protocol: STREAMABLE
+        # MCP Server 名称（客户端连接时会看到）
+        name: streamable-mcp-server
+        # MCP Server 版本
+        version: 1.0.0
+        # 同步模式（SYNC）
+        # SYNC：请求 - 响应模式，客户端等待服务器处理完成
+        # ASYNC：异步模式，服务器可以主动推送消息
+        type: SYNC
+        # MCP Server 描述信息（客户端可以通过 tools/list 获取）
+        instructions: "这个服务是用来查询城市天气的。"
+        # 启用资源变更通知
+        # 当工具列表变化时，主动通知客户端
+        resource-change-notification: true
+        # 启用工具变更通知
+        tool-change-notification: true
+        # 启用提示词变更通知
+        prompt-change-notification: true
+        annotation-scanner:
+          # 启用注解扫描（自动扫描 @Tool 注解）
+          enabled: true
+        streamable-http:
+          # MCP 端点路径
+          # 完整路径：http://localhost:8004/stream/test/api/mcp
+          mcp-endpoint: /api/mcp
+          # 心跳间隔（保持连接活跃）
+          # 30 秒发送一次心跳，防止连接超时
+          keep-alive-interval: 30s
