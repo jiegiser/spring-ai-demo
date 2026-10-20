@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.jiegiser.llm</groupId>
+        <artifactId>spring-ai-demo</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <properties>
+        <fastjson.version>2.0.43</fastjson.version>
+    </properties>
+
+    <!-- MCP Server 模块（stdio 模式） -->
+    <artifactId>mcp-server-stdio</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <dependencies>
+
+        <!--
+            Spring AI MCP Server Starter（WebMVC 版本）
+            
+            作用：
+            1. 自动配置 MCP Server
+            2. 提供 ToolCallbackProvider 支持
+            3. 支持 stdio 和 HTTP/SSE 两种传输模式
+            
+            注意：
+            - 虽然依赖名包含 "webmvc"，但通过 application.yml 配置 stdio=true
+            - 可以切换为纯 stdio 模式（不启动 Tomcat）
+            - 如果需要 HTTP/SSE 模式，设置 stdio=false 并启动 Web 服务器
+        -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+        </dependency>
+
+        <!-- Fastjson2：JSON 处理库（可选，用于自定义序列化） -->
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <!-- Lombok：简化 Java 代码（@Data、@Getter 等） -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven 插件：打包可执行 JAR -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

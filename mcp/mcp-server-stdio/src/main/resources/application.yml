@@ -1,0 +1,32 @@
+spring:
+  main:
+    # 不启动 Web 服务器（Tomcat）
+    # 因为 MCP Server 使用 stdio 模式（标准输入/输出），不需要 HTTP
+    web-application-type: none
+    # 关闭启动 Banner
+    banner-mode: off
+
+  ai:
+    mcp:
+      server:
+        # MCP Server 名称（客户端连接时会看到）
+        name: mcp-server
+        # MCP Server 版本
+        version: 1.0.0
+        # 启用 stdio 传输模式
+        # stdio = 标准输入/输出，客户端通过子进程方式连接
+        # 与 HTTP/SSE 模式不同，stdio 模式不需要端口
+        stdio: true
+        # 启用 MCP Server
+        enabled: true
+        # 同步模式（SYNC）
+        # SYNC：请求-响应模式，客户端等待服务器处理完成
+        # ASYNC：异步模式，服务器可以主动推送消息
+        type: SYNC
+
+logging:
+  level:
+    # 关闭所有日志输出（避免日志干扰 stdio 通信）
+    # stdio 模式下，stdout 用于传输 JSON-RPC 消息
+    # 如果输出日志，会破坏 JSON 格式，导致客户端解析失败
+    root: OFF

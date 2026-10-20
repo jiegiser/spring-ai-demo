@@ -17,6 +17,7 @@
     <description>Spring AI，相关示例</description>
 
     <modules>
+        <module>mcp/mcp-server-stdio</module>
         <module>springai</module>
         <module>LangChain4J</module>
         <module>function-call</module>
