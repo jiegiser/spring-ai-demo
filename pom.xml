@@ -21,6 +21,7 @@
         <module>mcp/mcp-server-stdio</module>
         <module>mcp/mcp-server-streamable</module>
         <module>mcp/mcp-client</module>
+        <module>mcp/mcp-server-sse-https</module>
         <module>springai</module>
         <module>LangChain4J</module>
         <module>function-call</module>
