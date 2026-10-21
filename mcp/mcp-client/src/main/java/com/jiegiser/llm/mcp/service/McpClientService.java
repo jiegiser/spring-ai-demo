@@ -59,26 +59,24 @@ public class McpClientService {
         }
         return null;
     }
+
     @PostConstruct
     public void init() {
+        // mcp 调用方式
         ToolCallback[] toolCallbacks = toolCallbackProvider.getToolCallbacks();
 
-        this.chatClient = ChatClient.builder(chatModel)
-                .defaultToolCallbacks(toolCallbacks)
-                .build();
+        this.chatClient = ChatClient.builder(chatModel).defaultToolCallbacks(toolCallbacks).build();
 
-//        this.chatClient = ChatClient.builder(chatModel)
-//                .defaultTools(new WeatherService())
-//                .build();
+        //         function call 调用方式
+        //        this.chatClient = ChatClient.builder(chatModel)
+        //                .defaultTools(new WeatherService())
+        //                .build();
     }
 
     /**
      * 智能体调用
      */
     public String chat(String userMessage) {
-        return chatClient.prompt()
-                .user(userMessage)
-                .call()
-                .content();
+        return chatClient.prompt().user(userMessage).call().content();
     }
 }

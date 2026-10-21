@@ -1,5 +1,6 @@
 package com.jiegiser.llm.mcp.service;
 
+import com.jiegiser.llm.mcp.callback.ReturnDirectMcpToolCallbackProvider;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
@@ -25,72 +26,60 @@ public class ManualMcpClientService {
 
     @PostConstruct
     public void init() {
-//        // STDIO
-//        ServerParameters parameters = ServerParameters.builder("java")
-//                .args("-jar", "D:\\LLMentor\\LLMentor\\mcp\\mcp-server-stdio\\target\\mcp-server-stdio-1.0.0-SNAPSHOT.jar")
-//                .build();
-//          stdioTransport = new StdioClientTransport(parameters, McpJsonMapper.createDefault());
-//
-//        McpSyncClient stdioClient = McpClient.sync(stdioTransport)
-//                .clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("my‑client", "1.0"))
-//                .requestTimeout(Duration.ofSeconds(10))
-//                .build();
-//
-//        stdioClient.initialize();
-//
-//        // SSE
-//        HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder("http://127.0.0.1:8003").sseEndpoint("/sse").build();
-//        McpSyncClient sseClient = McpClient.sync(transport)
-//                .clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("sse-client", "1.0"))
-//                .requestTimeout(Duration.ofSeconds(10))
-//                .build();
-//        sseClient.initialize();
+        //        // STDIO
+        //        ServerParameters parameters = ServerParameters.builder("java")
+        //                .args("-jar", "D:\\LLMentor\\LLMentor\\mcp\\mcp-server-stdio\\target\\mcp-server-stdio-1.0.0-SNAPSHOT.jar")
+        //                .build();
+        //          stdioTransport = new StdioClientTransport(parameters, McpJsonMapper.createDefault());
+        //
+        //        McpSyncClient stdioClient = McpClient.sync(stdioTransport)
+        //                .clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("my‑client", "1.0"))
+        //                .requestTimeout(Duration.ofSeconds(10))
+        //                .build();
+        //
+        //        stdioClient.initialize();
+        //
+        //        // SSE
+        //        HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder("http://127.0.0.1:8003").sseEndpoint("/sse").build();
+        //        McpSyncClient sseClient = McpClient.sync(transport)
+        //                .clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("sse-client", "1.0"))
+        //                .requestTimeout(Duration.ofSeconds(10))
+        //                .build();
+        //        sseClient.initialize();
 
         // STREAMABLE
         HttpClientStreamableHttpTransport streamableTransport = HttpClientStreamableHttpTransport.builder("http://127.0.0.1:8004/stream/test/").endpoint("api/mcp").build();
-        McpSyncClient streamableClient = McpClient.sync(streamableTransport)
-                .clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("streamable-client", "1.0"))
-                .requestTimeout(Duration.ofSeconds(10))
-                .build();
+        McpSyncClient streamableClient = McpClient.sync(streamableTransport).clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("streamable-client", "1.0")).requestTimeout(Duration.ofSeconds(10)).build();
         streamableClient.initialize();
 
         List<McpSyncClient> clients = List.of(streamableClient);
 
-        SyncMcpToolCallbackProvider provider = SyncMcpToolCallbackProvider.builder()
-                .mcpClients(clients)
-                .toolFilter((conn,tool) -> tool.name().startsWith("goods"))
-                .build();
+        SyncMcpToolCallbackProvider provider = SyncMcpToolCallbackProvider.builder().mcpClients(clients).toolFilter((conn, tool) -> tool.name().startsWith("goods")).build();
 
         ToolCallback[] callbacks = provider.getToolCallbacks();
-//        ReturnDirectMcpToolCallbackProvider returnDirectMcpToolCallbackProvider = new ReturnDirectMcpToolCallbackProvider(clients,true);
-//        ToolCallback[] callbacks = returnDirectMcpToolCallbackProvider.getToolCallbacks();
+        // 使用自定义的 ReturnDirectMcpToolCallbackProvider，实现直接返回 MCP 工具回调
+        // ReturnDirectMcpToolCallbackProvider returnDirectMcpToolCallbackProvider = new ReturnDirectMcpToolCallbackProvider(clients, true);
+        // ToolCallback[] callbacks = returnDirectMcpToolCallbackProvider.getToolCallbacks();
 
-        this.chatClient = ChatClient.builder(chatModel)
-                .defaultToolCallbacks(callbacks)
-                .build();
+        this.chatClient = ChatClient.builder(chatModel).defaultToolCallbacks(callbacks).build();
     }
 
     /**
      * 智能体调用
      */
     public String chat(String userMessage) {
-        return chatClient.prompt()
-                .user(userMessage)
-                .call()
-                .content();
+        return chatClient.prompt().user(userMessage).call().content();
     }
 
     /**
      * 测试
+     *
      * @param args
      */
     public static void main(String[] args) {
         // 如果 context-path: /test 设置了，这里的 builder 里面的地址与 sseEndpoint 传参需要注意
         HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder("http://127.0.0.1:8003/test/").sseEndpoint("sse").build();
-        McpSyncClient sseClient = McpClient.sync(transport)
-                .clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("sse-client", "1.0"))
-                .requestTimeout(Duration.ofSeconds(10))
-                .build();
+        McpSyncClient sseClient = McpClient.sync(transport).clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("sse-client", "1.0")).requestTimeout(Duration.ofSeconds(10)).build();
         sseClient.initialize();
     }
 }
