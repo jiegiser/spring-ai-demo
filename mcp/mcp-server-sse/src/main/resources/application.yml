@@ -24,4 +24,5 @@ spring:
           completion: false
         sse-message-endpoint: /mcp/messages   # 客户端向 MCP Server 发送指令（"写信"）
         sse-endpoint: /sse                    # 客户端订阅服务器推送消息（"听收音机"）
+#        注意！！！！！！ ----- > 如果有 context-path，则需要设置 base-url
 #        base-url: /test

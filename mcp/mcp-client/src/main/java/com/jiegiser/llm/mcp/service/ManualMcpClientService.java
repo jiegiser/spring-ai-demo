@@ -80,7 +80,12 @@ public class ManualMcpClientService {
                 .content();
     }
 
+    /**
+     * 测试
+     * @param args
+     */
     public static void main(String[] args) {
+        // 如果 context-path: /test 设置了，这里的 builder 里面的地址与 sseEndpoint 传参需要注意
         HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder("http://127.0.0.1:8003/test/").sseEndpoint("sse").build();
         McpSyncClient sseClient = McpClient.sync(transport)
                 .clientInfo(new io.modelcontextprotocol.spec.McpSchema.Implementation("sse-client", "1.0"))
