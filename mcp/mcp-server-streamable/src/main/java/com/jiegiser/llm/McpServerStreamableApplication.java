@@ -1,5 +1,8 @@
 package com.jiegiser.llm;
 
+import com.jiegiser.llm.service.GoodsService;
+import com.jiegiser.llm.service.OrderService;
+import com.jiegiser.llm.service.TradeService;
 import com.jiegiser.llm.service.WeatherService;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
@@ -59,10 +62,18 @@ public class McpServerStreamableApplication {
      * @param weatherService 天气服务（Spring Bean，包含 @Tool 方法）
      * @return 工具提供者，提供 getWeather 和 queryWeather 工具
      */
+    // @Bean
+    // public ToolCallbackProvider weatherTools(WeatherService weatherService) {
+    //     return MethodToolCallbackProvider.builder()
+    //             .toolObjects(weatherService)
+    //             .build();
+    // }
+
     @Bean
-    public ToolCallbackProvider weatherTools(WeatherService weatherService) {
+    public ToolCallbackProvider weatherTools(GoodsService goodsService, TradeService tradeService, OrderService orderService) {
+        // 自动扫描 goodsService、tradeService、orderService 对象的所有方法，带有 @Tool 注解的方法
         return MethodToolCallbackProvider.builder()
-                .toolObjects(weatherService)
+                .toolObjects(goodsService, tradeService, orderService)
                 .build();
     }
 }
