@@ -24,26 +24,26 @@ import java.time.Duration;
  * 本类演示两种处理方式：
  * <p>
  * 1. createInsecureHttpsClient：不校验证书（信任所有证书）
- *    - 适合：本地开发、内网测试（自签名证书环境）
- *    - 风险：中间人攻击（MITM），生产环境禁用！
+ * - 适合：本地开发、内网测试（自签名证书环境）
+ * - 风险：中间人攻击（MITM），生产环境禁用！
  * <p>
  * 2. createSecureHttpsClientPoc：加载 CA 证书校验（标准做法）
- *    - 适合：生产环境
- *    - 原理：把服务端证书（或其 CA 证书）导入本地信任库，握手时验证
+ * - 适合：生产环境
+ * - 原理：把服务端证书（或其 CA 证书）导入本地信任库，握手时验证
  * <p>
  * HTTPS 握手背景知识：
  * - Java HttpClient 默认会校验服务端证书：
- *   ① 证书是否由受信任的 CA 签发
- *   ② 证书是否过期
- *   ③ 证书的域名（CN/SAN）是否与访问的 host 一致
+ * ① 证书是否由受信任的 CA 签发
+ * ② 证书是否过期
+ * ③ 证书的域名（CN/SAN）是否与访问的 host 一致
  * - 自签名证书（如本地测试用 openssl 生成）不满足条件 ①，默认握手直接失败
  * - 所以本地测试 HTTPS MCP Server 时，要么信任所有证书，要么手动导入证书
  * <p>
  * 传输层组成：
  * HttpClientSseClientTransport
- *   ├── 自定义 HttpClient（配置 SSL 上下文、超时）
- *   ├── 自定义 HttpRequest 模板（配置 Authorization 请求头）
- *   └── SSE 端点路径（如 /sse）
+ * ├── 自定义 HttpClient（配置 SSL 上下文、超时）
+ * ├── 自定义 HttpRequest 模板（配置 Authorization 请求头）
+ * └── SSE 端点路径（如 /sse）
  */
 public class HttpsMcpService {
 
@@ -74,22 +74,20 @@ public class HttpsMcpService {
         try {
             // 1. 创建一个信任所有证书的 TrustManager
             //    匿名实现：所有校验方法为空 = 信任一切证书
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        /** 返回信任的 CA 证书列表（空 = 不校验颁发者） */
-                        public X509Certificate[] getAcceptedIssuers() {
-                            return new X509Certificate[0];
-                        }
+            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                /** 返回信任的 CA 证书列表（空 = 不校验颁发者） */
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
 
-                        /** 校验客户端证书：空实现 = 跳过校验 */
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
+                /** 校验客户端证书：空实现 = 跳过校验 */
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
 
-                        /** 校验服务端证书：空实现 = 跳过校验（核心跳过点） */
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
+                /** 校验服务端证书：空实现 = 跳过校验（核心跳过点） */
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }};
 
             // 2. 初始化 SSL 上下文，绕过校验
             //    TLS 协议 + 信任所有证书的 TrustManager + 随机数生成器
@@ -103,22 +101,14 @@ public class HttpsMcpService {
             sslParameters.setEndpointIdentificationAlgorithm(null);
 
             // 4. 构建自定义 HttpClient：注入 SSL 上下文 + 30 秒连接超时
-            HttpClient.Builder httpClient = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(30))
-                    .sslContext(sslContext)
-                    .sslParameters(sslParameters);
+            HttpClient.Builder httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(30)).sslContext(sslContext).sslParameters(sslParameters);
 
             // 5. 构建请求模板：所有请求都带上 Authorization 头（Bearer Token 认证）
             //    MCP Server 可以校验此 Token，实现接口鉴权
-            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                    .uri(URI.create(baseUrl))
-                    .header("Authorization", "Bearer abc123456789");
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(baseUrl)).header("Authorization", "Bearer abc123456789");
 
             // 6. 构建 SSE 传输层：把自定义 HttpClient 和请求模板注入
-            HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder(baseUrl).sseEndpoint(endpoint)
-                    .clientBuilder(httpClient)
-                    .requestBuilder(requestBuilder)
-                    .build();
+            HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder(baseUrl).sseEndpoint(endpoint).clientBuilder(httpClient).requestBuilder(requestBuilder).build();
 
             // 7. 创建 MCP 同步客户端并握手
             McpSyncClient mcp = McpClient.sync(transport).build();
@@ -179,17 +169,16 @@ public class HttpsMcpService {
             // 5. 使用默认 Hostname 验证
             //    不设置 SSLParameters → 保留默认的域名校验（更安全）
             //    注意：自签名证书需要包含对应的 IP/域名 SAN，否则会校验失败
-            HttpClient.Builder httpClient = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(30))
-                    .sslContext(sslContext);
-
+            HttpClient.Builder httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(30)).sslContext(sslContext);
 
 
             // 6. 构建 SSE Transport
-            //    请求模板带 Authorization 头（Bearer Token 认证）
-            HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder(baseUrl)
+            //    请求模板带 Authorization 头（Bearer Token 认证） -----> 实现 mcp 服务认证鉴权关键！！
+            HttpClientSseClientTransport transport = HttpClientSseClientTransport
+                    .builder(baseUrl)
                     .sseEndpoint(endpoint)
                     .clientBuilder(httpClient)
+                    // 构造请求模板：所有请求都带上 Authorization 头（Bearer Token 认证）
                     .requestBuilder(HttpRequest.newBuilder().header("Authorization", "Bearer abc123456789"))
                     .build();
 
@@ -216,9 +205,11 @@ public class HttpsMcpService {
      */
     public static void main(String[] args) {
 
-//        createInsecureHttpsClient("https://127.0.0.1:8443", "/sse");
-        createSecureHttpsClientPoc("https://127.0.0.1:8443",
+        // createInsecureHttpsClient("https://127.0.0.1:8443", "/sse");
+        createSecureHttpsClientPoc(
+                "https://127.0.0.1:8443",
                 "/sse",
-                "D:\\LLMentor\\LLMentor\\mcp\\mcp-server-sse-https\\src\\main\\resources\\mcp-server.crt");
+                "D:\\LLMentor\\LLMentor\\mcp\\mcp-server-sse-https\\src\\main\\resources\\mcp-server.crt"
+        );
     }
 }
