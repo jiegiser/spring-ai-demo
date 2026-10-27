@@ -2,6 +2,7 @@ package com.jiegiser.llm.reader;
 
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.ExtractedTextFormatter;
+import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
 import org.springframework.ai.reader.pdf.ParagraphPdfDocumentReader;
 import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
 import org.springframework.core.io.FileSystemResource;
@@ -34,7 +35,14 @@ public class PdfReaderStrategy implements DocumentReaderStrategy {
                         .build())
                 .build();
 
-        ParagraphPdfDocumentReader pdfReader = new ParagraphPdfDocumentReader(resource, config);
-        return pdfReader.read();
+        // 优先尝试按目录（TOC）分段，失败则回退到按页读取
+        try {
+            ParagraphPdfDocumentReader paragraphReader = new ParagraphPdfDocumentReader(resource, config);
+            return paragraphReader.read();
+        } catch (IllegalArgumentException e) {
+            // PDF 没有 TOC 大纲，回退到按页读取
+            PagePdfDocumentReader pageReader = new PagePdfDocumentReader(resource, config);
+            return pageReader.read();
+        }
     }
 }

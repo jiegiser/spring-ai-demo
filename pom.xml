@@ -34,7 +34,7 @@
         <fastjson.version>2.0.43</fastjson.version>
         <spring.ai.alibaba.version>1.1.2.0</spring.ai.alibaba.version>
         <!-- 统一配置 API Key，需要改成自己的-->
-        <dashscope.api.key>sk-ws-H.PYMLYIX.YsUh.MEUCIQDDT80meKDh8U-qw6HohyJusp65d51ZDMa4C3Vsm12H5gIgQlwGDL6Sn7Q36tSP1bEsKaClOcIRN0ZJGmEEC_sOvqA</dashscope.api.key>
+        <dashscope.api.key>xxxxx</dashscope.api.key>
     </properties>
 
     <dependencyManagement>
