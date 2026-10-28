@@ -27,10 +27,10 @@ spring:
     username: pgvector # 记得改成你自己的
     password: pgvector # 记得改成你自己的
   neo4j:
-    uri: bolt://localhost:7687 # 记得改成你自己的
+    uri: bolt://172.28.41.125:7687 # 记得改成你自己的
     authentication:
       username: neo4j # 记得改成你自己的
-      password: neo4j666 # 记得改成你自己的
+      password: neo4j@2026 # 记得改成你自己的
     # 连接失败不阻止启动
     connection-timeout: 5s
     # 启动时不验证连接
