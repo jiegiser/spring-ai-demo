@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 710" width="1680" height="710">
+  <style>text{font-family:'Helvetica Neue',Helvetica,Arial,'PingFang SC','Microsoft YaHei','Microsoft JhengHei','SimHei',sans-serif;}</style>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#059669"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+  </defs>
+  <rect width="1680" height="710" fill="#ffffff"/>
+  <text x="20" y="40" font-size="18" fill="#111827" font-weight="600" text-anchor="start">Spring AI 1.1.0 Modular RAG 模块化流水线</text>
+  <text x="20" y="62" font-size="12" fill="#6b7280" font-weight="400" text-anchor="start">编排器 RetrievalAugmentationAdvisor 按固定顺序执行 6 个模块 · 依据 spring-ai-rag-1.1.0.jar 字节码与 ModularRagController 实测</text>
+  <rect x="210" y="100" width="1240" height="290" rx="10" fill="#fbfbfc" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="7,5"/>
+  <text x="230" y="128" font-size="14" fill="#111827" font-weight="600" text-anchor="start">RetrievalAugmentationAdvisor（编排器）</text>
+  <text x="1430" y="128" font-size="11" fill="#6b7280" font-weight="400" text-anchor="end">包：org.springframework.ai.rag</text>
+  <rect x="230" y="140" width="183" height="180" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="240" y="163" font-size="13" fill="#111827" font-weight="600" text-anchor="start">① 查询改写 · 检索前</text>
+  <text x="240" y="184" font-size="11" fill="#374151" font-weight="400" text-anchor="start">接口 · QueryTransformer</text>
+  <line x1="240" y1="194" x2="403" y2="194" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="240" y="212" font-size="11" fill="#6b7280" font-weight="400" text-anchor="start">默认 · 无（不处理）</text>
+  <text x="240" y="230" font-size="11" fill="#374151" font-weight="400" text-anchor="start">本项目</text>
+  <text x="240" y="245" font-size="10" fill="#111827" font-weight="400" text-anchor="start">RewriteQueryTransformer</text>
+  <rect x="292" y="259" width="58" height="16" rx="8" fill="#ffffff" stroke="#fdba74" stroke-width="1"/>
+  <text x="321.5" y="270.5" font-size="9.5" fill="#c2410c" font-weight="600" text-anchor="middle">LLM ×1</text>
+  <text x="240" y="300" font-size="10" fill="#6b7280" font-weight="400" text-anchor="start">Query → Query</text>
+  <rect x="433" y="140" width="183" height="180" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="443" y="163" font-size="13" fill="#111827" font-weight="600" text-anchor="start">② 查询扩展 · 检索前</text>
+  <text x="443" y="184" font-size="11" fill="#374151" font-weight="400" text-anchor="start">接口 · QueryExpander</text>
+  <line x1="443" y1="194" x2="606" y2="194" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="443" y="212" font-size="11" fill="#6b7280" font-weight="400" text-anchor="start">默认 · 不扩展（1→1）</text>
+  <text x="443" y="230" font-size="11" fill="#374151" font-weight="400" text-anchor="start">本项目</text>
+  <text x="443" y="245" font-size="10" fill="#111827" font-weight="400" text-anchor="start">MultiQueryExpander</text>
+  <rect x="495" y="259" width="58" height="16" rx="8" fill="#ffffff" stroke="#fdba74" stroke-width="1"/>
+  <text x="524.5" y="270.5" font-size="9.5" fill="#c2410c" font-weight="600" text-anchor="middle">LLM ×1</text>
+  <text x="443" y="300" font-size="10" fill="#6b7280" font-weight="400" text-anchor="start">Query → List&lt;Query&gt; ×4</text>
+  <rect x="636" y="140" width="183" height="180" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+  <text x="646" y="163" font-size="13" fill="#111827" font-weight="600" text-anchor="start">③ 文档检索 · 检索中</text>
+  <text x="646" y="184" font-size="11" fill="#374151" font-weight="400" text-anchor="start">接口 · DocumentRetriever</text>
+  <line x1="646" y1="194" x2="809" y2="194" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="646" y="212" font-size="11" fill="#6b7280" font-weight="400" text-anchor="start">默认 · ★必填（不可为空）</text>
+  <text x="646" y="230" font-size="11" fill="#374151" font-weight="400" text-anchor="start">本项目</text>
+  <text x="646" y="245" font-size="10" fill="#111827" font-weight="400" text-anchor="start">VectorStoreDocumentRetriever</text>
+  <rect x="690" y="259" width="74" height="16" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1"/>
+  <text x="727.5" y="270.5" font-size="9.5" fill="#15803d" font-weight="600" text-anchor="middle">Embedding</text>
+  <text x="646" y="300" font-size="10" fill="#6b7280" font-weight="400" text-anchor="start">List&lt;Query&gt; → Map&lt;Query,docs&gt;</text>
+  <rect x="839" y="140" width="183" height="180" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+  <text x="849" y="163" font-size="13" fill="#111827" font-weight="600" text-anchor="start">④ 结果合并 · 检索后</text>
+  <text x="849" y="184" font-size="11" fill="#374151" font-weight="400" text-anchor="start">接口 · DocumentJoiner</text>
+  <line x1="849" y1="194" x2="1012" y2="194" stroke="#fed7aa" stroke-width="1"/>
+  <text x="849" y="212" font-size="11" fill="#6b7280" font-weight="400" text-anchor="start">ConcatenationDocumentJoiner</text>
+  <text x="849" y="230" font-size="11" fill="#374151" font-weight="400" text-anchor="start">本项目 · 用默认</text>
+  <text x="849" y="245" font-size="10" fill="#111827" font-weight="400" text-anchor="start">（拼接，不去重）</text>
+  <rect x="891" y="259" width="78" height="16" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+  <text x="930.5" y="270.5" font-size="9.5" fill="#6b7280" font-weight="600" text-anchor="middle">无外部调用</text>
+  <text x="849" y="300" font-size="10" fill="#6b7280" font-weight="400" text-anchor="start">Map&lt;Q,docs&gt; → List&lt;Document&gt;</text>
+  <rect x="1042" y="140" width="183" height="180" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+  <text x="1052" y="163" font-size="13" fill="#111827" font-weight="600" text-anchor="start">⑤ 文档后处理 · 检索后</text>
+  <text x="1052" y="184" font-size="11" fill="#374151" font-weight="400" text-anchor="start">接口 · DocumentPostProcessor</text>
+  <line x1="1052" y1="194" x2="1215" y2="194" stroke="#fed7aa" stroke-width="1"/>
+  <text x="1052" y="212" font-size="11" fill="#6b7280" font-weight="400" text-anchor="start">默认 · 空列表（不处理）</text>
+  <text x="1052" y="230" font-size="11" fill="#374151" font-weight="400" text-anchor="start">本项目 · 用默认</text>
+  <text x="1052" y="245" font-size="10" fill="#111827" font-weight="400" text-anchor="start">（原样透传）</text>
+  <rect x="1094" y="259" width="78" height="16" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+  <text x="1133.5" y="270.5" font-size="9.5" fill="#6b7280" font-weight="600" text-anchor="middle">无外部调用</text>
+  <text x="1052" y="300" font-size="10" fill="#6b7280" font-weight="400" text-anchor="start">List&lt;Document&gt; 原样透传</text>
+  <rect x="1245" y="140" width="183" height="180" rx="8" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+  <text x="1255" y="163" font-size="13" fill="#111827" font-weight="600" text-anchor="start">⑥ 上下文增强 · 生成</text>
+  <text x="1255" y="184" font-size="11" fill="#374151" font-weight="400" text-anchor="start">接口 · QueryAugmenter</text>
+  <line x1="1255" y1="194" x2="1418" y2="194" stroke="#ddd6fe" stroke-width="1"/>
+  <text x="1255" y="212" font-size="11" fill="#6b7280" font-weight="400" text-anchor="start">ContextualQueryAugmenter</text>
+  <text x="1255" y="230" font-size="11" fill="#374151" font-weight="400" text-anchor="start">本项目</text>
+  <text x="1255" y="245" font-size="10" fill="#111827" font-weight="400" text-anchor="start">同默认 allowEmptyContext(true)</text>
+  <rect x="1297" y="259" width="78" height="16" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+  <text x="1336.5" y="270.5" font-size="9.5" fill="#6b7280" font-weight="600" text-anchor="middle">无外部调用</text>
+  <text x="1255" y="300" font-size="10" fill="#6b7280" font-weight="400" text-anchor="start">(Q, docs) → Query 最终提示词</text>
+  <rect x="20" y="167" width="170" height="126" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="105" y="192" font-size="13" fill="#111827" font-weight="600" text-anchor="middle">用户请求</text>
+  <text x="105" y="212" font-size="10" fill="#6b7280" font-weight="400" text-anchor="middle">GET /rag/modular/retriever</text>
+  <text x="105" y="228" font-size="10" fill="#6b7280" font-weight="400" text-anchor="middle">?query=折叠屏手机怎么样</text>
+  <line x1="35" y1="240" x2="175" y2="240" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="105" y="258" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">Advisor 构造 Query：</text>
+  <text x="105" y="274" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">text + history + context</text>
+  <rect x="1490" y="150" width="170" height="160" rx="8" fill="#ffffff" stroke="#9ca3af" stroke-width="2"/>
+  <text x="1575" y="176" font-size="13" fill="#111827" font-weight="600" text-anchor="middle">发送给大模型</text>
+  <text x="1575" y="196" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">增强文本整段替换</text>
+  <text x="1575" y="212" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">原始 user message</text>
+  <line x1="1505" y1="226" x2="1645" y2="226" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1575" y="248" font-size="11" fill="#111827" font-weight="600" text-anchor="middle">ChatModel 生成回答</text>
+  <text x="1575" y="268" font-size="9.5" fill="#6b7280" font-weight="400" text-anchor="middle">元数据 rag_document_context</text>
+  <text x="1575" y="284" font-size="9.5" fill="#6b7280" font-weight="400" text-anchor="middle">（本次检索到的文档列表）</text>
+  <line x1="190" y1="230" x2="226" y2="230" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="413" y1="230" x2="431" y2="230" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="616" y1="230" x2="634" y2="230" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="819" y1="230" x2="837" y2="230" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="1022" y1="230" x2="1040" y2="230" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="1225" y1="230" x2="1243" y2="230" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="1428" y1="230" x2="1486" y2="230" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <rect x="330" y="440" width="240" height="100" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+  <text x="450" y="462" font-size="12" fill="#111827" font-weight="600" text-anchor="middle">外部大模型（DashScope）</text>
+  <text x="450" y="482" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">① 改写、② 扩展 各调用 1 次</text>
+  <text x="450" y="498" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">每次请求共 2 次额外 LLM 调用</text>
+  <text x="450" y="514" font-size="10" fill="#6b7280" font-weight="400" text-anchor="middle">（生成式调用，有 token 成本）</text>
+  <path d="M 321,322 L 321,408 L 430,408 L 430,436" stroke="#ea580c" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrow-orange)"/>
+  <path d="M 524,322 L 524,424 L 470,424 L 470,436" stroke="#ea580c" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrow-orange)"/>
+  <text x="331" y="402" font-size="10" fill="#c2410c" font-weight="600" text-anchor="start">LLM ×1</text>
+  <text x="532" y="418" font-size="10" fill="#c2410c" font-weight="600" text-anchor="start">LLM ×1</text>
+  <path d="M 760,452 L 760,530 A 125 13 0 0 0 1010,530 L 1010,452 Z" fill="#f0fdf4" stroke="none"/>
+  <ellipse cx="885" cy="452" rx="125" ry="13" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <path d="M 760,452 L 760,530 A 125 13 0 0 0 1010,530 L 1010,452" fill="none" stroke="#86efac" stroke-width="1.5"/>
+  <text x="885" y="485" font-size="12" fill="#111827" font-weight="600" text-anchor="middle">pgvector 向量库（PostgreSQL）</text>
+  <text x="885" y="505" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">Embedding：text-embedding-v4（768 维）</text>
+  <text x="885" y="522" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">topK=5 · 阈值 0.6 · 4 路查询并行</text>
+  <line x1="900" y1="322" x2="900" y2="426" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="908" y="376" font-size="10" fill="#15803d" font-weight="600" text-anchor="start">查询向量化</text>
+  <path d="M 960,428 L 960,398 L 940,398 L 940,324" stroke="#059669" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <text x="968" y="414" font-size="10" fill="#15803d" font-weight="600" text-anchor="start">返回 topK 文档</text>
+  <rect x="1240" y="440" width="250" height="100" rx="8" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+  <text x="1365" y="462" font-size="12" fill="#111827" font-weight="600" text-anchor="middle">ChatModel（qwen）生成回答</text>
+  <text x="1365" y="482" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">只看到 ⑥ 输出的增强提示词</text>
+  <text x="1365" y="498" font-size="10" fill="#374151" font-weight="400" text-anchor="middle">原始问题已并入模板 {query} 槽位</text>
+  <text x="1365" y="514" font-size="10" fill="#6b7280" font-weight="400" text-anchor="middle">检索为空时按 allowEmptyContext 策略</text>
+  <rect x="1030" y="444" width="195" height="52" rx="8" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="1127" y="464" font-size="11" fill="#111827" font-weight="600" text-anchor="middle">响应元数据（副产物）</text>
+  <text x="1127" y="482" font-size="10" fill="#6b7280" font-weight="400" text-anchor="middle">rag_document_context</text>
+  <line x1="1133" y1="392" x2="1133" y2="440" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-gray)"/>
+  <text x="20" y="590" font-size="13" fill="#111827" font-weight="600" text-anchor="start">图例</text>
+  <line x1="20" y1="612" x2="48" y2="612" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="58" y="616" font-size="11" fill="#374151" font-weight="400" text-anchor="start">主数据流：模块间流转（数据形态见各卡片底部）</text>
+  <line x1="20" y1="640" x2="48" y2="640" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-orange)"/>
+  <text x="58" y="644" font-size="11" fill="#374151" font-weight="400" text-anchor="start">调用大模型 LLM：① ② 各 1 次，每次请求共 2 次额外调用</text>
+  <line x1="20" y1="668" x2="48" y2="668" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="58" y="672" font-size="11" fill="#374151" font-weight="400" text-anchor="start">Embedding 向量化：③ 检索前先将查询文本转成向量</text>
+  <line x1="560" y1="612" x2="588" y2="612" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <text x="598" y="616" font-size="11" fill="#374151" font-weight="400" text-anchor="start">向量库返回文档：4 路查询各取 topK=5，并行执行</text>
+  <line x1="560" y1="640" x2="588" y2="640" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-gray)"/>
+  <text x="598" y="644" font-size="11" fill="#374151" font-weight="400" text-anchor="start">副产物：检索到的文档写入响应元数据 rag_document_context</text>
+  <text x="560" y="672" font-size="11" fill="#6b7280" font-weight="400" text-anchor="start">卡片配色：蓝 = 检索前 · 绿 = 检索 · 橙 = 检索后 · 紫 = 生成</text>
+</svg>
