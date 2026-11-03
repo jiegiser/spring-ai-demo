@@ -64,7 +64,7 @@ public class PdfMultimodalProcessor {
     private MinioService minioService;
 
     /**
-     * 处理PDF文件，提取其中的文字和图片内容
+     * 处理 PDF 文件，提取其中的文字和图片内容
      *
      * @param pdfFile PDF文件对象
      * @return 按照阅读顺序整合后的文本内容（包含图片的文本描述）
@@ -73,7 +73,7 @@ public class PdfMultimodalProcessor {
      *                   处理流程：
      *                   1. 加载PDF文档
      *                   2. 逐页遍历处理
-     *                   3. 对每一页，使用自定义的UnifiedContentStripper同时提取文字和图片
+     *                   3. 对每一页，使用自定义的 UnifiedContentStripper 同时提取文字和图片
      *                   4. 按照坐标位置对提取的内容进行排序
      *                   5. 按顺序拼接所有内容
      */
@@ -406,9 +406,9 @@ public class PdfMultimodalProcessor {
             String operation = operator.getName();
             // 拦截"Do"指令（PDF中用于绘制XObject的指令，包括图片）
             if ("Do".equals(operation)) {
-                // 获取XObject的名称
+                // 获取 XObject 的名称
                 COSName objectName = (COSName) operands.get(0);
-                // 通过名称获取XObject对象
+                // 通过名称获取 XObject 对象
                 PDXObject xobject = getResources().getXObject(objectName);
 
                 // 判断XObject是否为图片对象
@@ -416,20 +416,20 @@ public class PdfMultimodalProcessor {
                     // 获取当前图形状态中的变换矩阵（CTM），包含图片的位置和尺寸信息
                     Matrix ctm = getGraphicsState().getCurrentTransformationMatrix();
 
-                    // CTM使用底向上的坐标系
-                    // 获取图片左下角的X坐标
+                    // CTM 使用底向上的坐标系
+                    // 获取图片左下角的 X 坐标
                     float x = ctm.getTranslateX();
-                    // 获取图片左下角的Y坐标
+                    // 获取图片左下角的 Y 坐标
                     float y = ctm.getTranslateY();
-                    // 获取图片的高度（Y方向的缩放因子）
+                    // 获取图片的高度（Y 方向的缩放因子）
                     float h = ctm.getScalingFactorY();
 
-                    // 为了与文本坐标系统一，y0记为图片上沿距底部的距离
+                    // 为了与文本坐标系统一，y0 记为图片上沿距底部的距离
                     // 图片上沿 = 左下角Y坐标 + 高度
                     int x0 = (int) x;
                     int y0 = (int) (y + h);
 
-                    // 实时处理图片：提取、转换、AI识别
+                    // 实时处理图片：提取、转换、AI 识别
                     String imageTag = processImage(image);
                     // 将图片元素添加到列表中
                     elements.add(new ContentElement(ContentType.IMAGE, imageTag, x0, y0, 0, 0));
