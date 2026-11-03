@@ -53,9 +53,11 @@ public class LangChainRagController {
 
         OpenAiEmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder().modelName("text-embedding-v4")  // 阿里云 DashScope 的 embedding 模型名称
                 .dimensions(768)  // text-embedding-v4 支持 768 维度
-                .baseUrl("https://dashscope.aliyuncs.com/compatible-mode/v1").apiKey("改成你自己的key").build();
+                .baseUrl("https://dashscope.aliyuncs.com/compatible-mode/v1")
+                .apiKey("改成你自己的key")
+                .build();
 
-        // 3.生成embedding
+        // 3.生成 embedding
         List<Embedding> allEmbeddings = new ArrayList<>();
         for (int i = 0; i < textSegments.size(); i = i + 9) {
             List<TextSegment> segmentList = textSegments.subList(i, Math.min(i + 9, textSegments.size()));
@@ -67,7 +69,7 @@ public class LangChainRagController {
         InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
         embeddingStore.addAll(allEmbeddings, textSegments);
 
-        // 5.构建上下文融合器
+        // 5.构建上下文融合器（检索增强器）
         DefaultContentInjector contentInjector = new DefaultContentInjector(new PromptTemplate("""
                  ## 角色定位
                  你是一位专业的RAG问答助手。请根据提供的上下文信息，详细、准确地回答用户的问题。如果参考文档没有内容，请务必不要胡编乱造，请直接说明"没有找到相关信息"。
@@ -93,13 +95,30 @@ public class LangChainRagController {
                 """));
 
         // 6.构建检索增强器
-        DefaultRetrievalAugmentor retrievalAugmentor = DefaultRetrievalAugmentor.builder().contentRetriever(EmbeddingStoreContentRetriever.builder().embeddingStore(embeddingStore).embeddingModel(embeddingModel).maxResults(5).minScore(0.7).build()).contentInjector(contentInjector).build();
+        DefaultRetrievalAugmentor retrievalAugmentor = DefaultRetrievalAugmentor
+                .builder()
+                .contentRetriever(
+                        EmbeddingStoreContentRetriever
+                                .builder()
+                                .embeddingStore(embeddingStore)
+                                .embeddingModel(embeddingModel)
+                                .maxResults(5)
+                                .minScore(0.7)
+                                .build()
+                )
+                .contentInjector(contentInjector)
+                .build();
 
 
-        // 7.构建最终的AI服务
-        LangChainAiService langChainAiService = AiServices.builder(LangChainAiService.class).chatModel(chatModel).retrievalAugmentor(retrievalAugmentor).chatMemory(MessageWindowChatMemory.withMaxMessages(10)).build();
+        // 7.构建最终的 AI 服务
+        LangChainAiService langChainAiService = AiServices
+                .builder(LangChainAiService.class)
+                .chatModel(chatModel)
+                .retrievalAugmentor(retrievalAugmentor)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
+                .build();
 
-        // 8.调用AI服务
+        // 8.调用 AI 服务
         return langChainAiService.chat(query);
     }
 
