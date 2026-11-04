@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * 模态文本切分器 (Modal Text Splitter)
  * 功能：
  * 1. 保证 <image>...</image> 标签的完整性。
- * 2. 图片块才应用前后 overlap。
+ * 2. 图片块才应用前后 overlap（图片解析后为文字，有可能图片存在描述说明，所以，可以采用 overlap 方式保留）。
  * 3. 纯文本块不包含图片内容，超长文本按 maxSize 切分，无 overlap。
  */
 public class ModalTextSplitter extends TextSplitter {

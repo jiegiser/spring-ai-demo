@@ -171,9 +171,18 @@ public class RagImageController {
     @RequestMapping("chat")
     public String chat(String question) {
 
-        VectorStoreDocumentRetriever retriever = VectorStoreDocumentRetriever.builder().vectorStore(vectorStore).topK(5).similarityThreshold(0.3).build();
+        VectorStoreDocumentRetriever retriever = VectorStoreDocumentRetriever
+                .builder()
+                .vectorStore(vectorStore)
+                .topK(5)
+                .similarityThreshold(0.3)
+                .build();
 
-        QueryAugmenter queryAugmenter = ContextualQueryAugmenter.builder().allowEmptyContext(true).promptTemplate(new PromptTemplate("""
+        QueryAugmenter queryAugmenter = ContextualQueryAugmenter
+                .builder()
+                .allowEmptyContext(true)
+                .promptTemplate(
+                        new PromptTemplate("""
                 ## 角色定位
                 你是一位专业的RAG问答助手。请根据提供的上下文信息，详细、准确地回答用户的问题。如果参考文档没有内容，请务必不要胡编乱造，请直接说明"没有找到相关信息"。
                                         
@@ -199,9 +208,16 @@ public class RagImageController {
                 """)).build();
 
 
-        RetrievalAugmentationAdvisor retrievalAugmentationAdvisor = RetrievalAugmentationAdvisor.builder().documentRetriever(retriever).queryAugmenter(queryAugmenter).build();
+        RetrievalAugmentationAdvisor retrievalAugmentationAdvisor = RetrievalAugmentationAdvisor
+                .builder()
+                .documentRetriever(retriever)
+                .queryAugmenter(queryAugmenter)
+                .build();
 
-        ChatClient chatClient = ChatClient.builder(chatModel).defaultAdvisors(retrievalAugmentationAdvisor).build();
+        ChatClient chatClient = ChatClient
+                .builder(chatModel)
+                .defaultAdvisors(retrievalAugmentationAdvisor)
+                .build();
 
         String result = chatClient.prompt(new Prompt(question)).call().content();
         System.out.println(result);

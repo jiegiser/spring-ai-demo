@@ -161,6 +161,12 @@ public class RagSplitterController {
     @Autowired
     private PdfMultimodalProcessor processer;
 
+    /**
+     * 多模态分片（文本包含图片）
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("mulitModal")
     public String mulitModal(String filePath) throws Exception {
 

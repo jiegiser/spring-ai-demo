@@ -155,7 +155,7 @@ public class PdfMultimodalProcessor {
             String base64Image = Base64.getEncoder().encodeToString(imageBytes);
             String description = image2Text(base64Image);
             description = (description == null || description.trim().isEmpty()) ? "[无法识别图片内容]" : description.trim();
-
+            // 返回<image>标签，包含图片的 URL 和描述 -> 方便检索之后给用户呈现图片
             return String.format("<image src=\"%s\" description=\"%s\"></image>", imageUrl, escapeXml(description));
         } catch (Exception e) {
             log.error("图片处理异常", e);
@@ -164,7 +164,7 @@ public class PdfMultimodalProcessor {
     }
 
     /**
-     * 转义XML特殊字符，防止XML解析错误
+     * 转义 XML 特殊字符，防止XML解析错误
      *
      * @param text 需要转义的文本
      * @return 转义后的文本
@@ -204,9 +204,9 @@ public class PdfMultimodalProcessor {
 
 
     /**
-     * 将图片转换为文本描述（使用AI识别）
+     * 将图片转换为文本描述（使用 AI 识别）
      *
-     * @param imageBase64 图片的Base64编码字符串
+     * @param imageBase64 图片的 Base64 编码字符串
      * @return 图片的文本描述
      */
     public String image2Text(String imageBase64) {
