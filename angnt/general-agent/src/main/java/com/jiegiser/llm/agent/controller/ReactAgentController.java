@@ -191,12 +191,27 @@ public class ReactAgentController {
     @Autowired
     private DataSource dataSource;
 
+    /**
+     * 调用模型 -> ReAct 架构/Spring AI Alibaba
+     * 记忆 -> MySQL 存储
+     * @param conversationId
+     * @param msg
+     * @return
+     * @throws GraphRunnerException
+     */
     @GetMapping("/chatWithMySqlSaver")
     public String chatWithMySqlSaver(String conversationId, String msg) throws GraphRunnerException {
 
         String systemPrompt = String.format("你是一个智能助手");
 
-        ReactAgent agent = ReactAgent.builder().name("executor").model(chatModel).systemPrompt(systemPrompt).saver(new MysqlSaver.Builder().dataSource(dataSource).build()).build();
+        ReactAgent agent = ReactAgent
+                .builder()
+                .name("executor")
+                .model(chatModel)
+                // .hooks()
+                .systemPrompt(systemPrompt)
+                .saver(new MysqlSaver.Builder().dataSource(dataSource).build())
+                .build();
 
         RunnableConfig config = RunnableConfig.builder().threadId(conversationId).build();
 
@@ -205,12 +220,32 @@ public class ReactAgentController {
         return chatResponse.getText();
     }
 
+    /**
+     * 流式调用模型 -> ReAct 架构/Spring AI Alibaba
+     * @param conversationId
+     * @return
+     * @throws GraphRunnerException
+     */
     @GetMapping("/streamWithSpringAiAlibaba")
     public Flux<String> streamWithSpringAiAlibaba(String conversationId) throws GraphRunnerException {
 
-        String systemPrompt = String.format("你是一个基于React架构（Reasoning-Act-Observation）的智能助手，你擅长使用工具帮我解决问题。" + "你的工作流程是：" + "1、思考：先根据用户的提问进行思考，推理出下一步需要进行的具体系统" + "2、行动：做具体的行动，这一步可以使用工具" + "3、观察：记录前一步行动的结果。你可以进行多轮思考和行动。如果要使用工具，请务必调用工具，不要自己随便捏造结果。");
+        String systemPrompt = String.format(
+                "你是一个基于React架构（Reasoning-Act-Observation）的智能助手，你擅长使用工具帮我解决问题。" + "你的工作流程是："
+                        + "1、思考：先根据用户的提问进行思考，推理出下一步需要进行的具体系统"
+                        + "2、行动：做具体的行动，这一步可以使用工具"
+                        + "3、观察：记录前一步行动的结果。你可以进行多轮思考和行动。如果要使用工具，请务必调用工具，不要自己随便捏造结果。"
+        );
 
-        ReactAgent agent = ReactAgent.builder().name("executor").model(chatModel).tools(ToolCallbacks.from(new StockTools())).systemPrompt(systemPrompt).saver(new MemorySaver()).build();
+        ReactAgent agent = ReactAgent
+                .builder()
+                .name("executor")
+                .model(chatModel)
+                .tools(
+                        ToolCallbacks.from(new StockTools())
+                )
+                .systemPrompt(systemPrompt)
+                .saver(new MemorySaver())
+                .build();
 
         RunnableConfig config = RunnableConfig.builder().threadId(conversationId).build();
 
